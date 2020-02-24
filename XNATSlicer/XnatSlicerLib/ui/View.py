@@ -97,19 +97,19 @@ class View(object):
             self.clear()
             projectContents = None
 
-            #try:
-            projectContents = self.MODULE.XnatIo.\
-                              getFolder('projects',
-                              Xnat.metadata.DEFAULT_TAGS['projects'],
-                                        'accessible')
+            try:
+                projectContents = self.MODULE.XnatIo.\
+                                  getFolder('projects',
+                                  Xnat.metadata.DEFAULT_TAGS['projects'],
+                                            'accessible')
 
             #
             # Error: SERVER ISSUES
             #
-            #except Exception as e:
-            #    self.showError("Server error", "Server error for " +
-            #                   "'HOST_NAME' (HOST_URL):\n%s" %(str(e)))
-            #    return
+            except Exception as e:
+                self.showError("Server error", "Server error for " +
+                               "'HOST_NAME' (HOST_URL):\n%s" %(str(e)))
+                return
                 
             #
             # Error: LOGIN

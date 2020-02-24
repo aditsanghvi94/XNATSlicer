@@ -772,7 +772,6 @@ class Xnat(object):
             url = Xnat.path.makeXnatUrl(self.host, _uri)
             request = urllib.request.Request(url)
             host = request.host
-            #print ("XNAT URL: ", _uri, url) 
             
             #-------------------- 
             # For local uris
@@ -1286,8 +1285,13 @@ class Xnat(object):
             @return: The full XNAT url for to run the query on.
             @rtype: string
             """
-            
-        
+
+            # decode url in cases where it is of type bytes instead of str
+            try:
+                _url = _url.decode()
+            except (UnicodeDecodeError, AttributeError):
+                pass
+
             if _url.startswith('/'):
                 _url = _url[1:]
 

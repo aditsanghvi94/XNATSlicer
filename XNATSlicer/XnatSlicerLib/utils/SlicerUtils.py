@@ -1,4 +1,4 @@
-from __future__ import with_statement
+
 
 __author__ = "Sunil Kumar (kumar.sunil.p@gmail.com)"
 __copyright__ = "Copyright 2014, Washington University in St. Louis"
@@ -84,7 +84,7 @@ class SlicerUtils(object):
                     if (str(mrmlNode.GetVisibility()) == "1" ):
                         ##print "The %sth node of the scene is visible: %s"%(str(i), mrmlNode.GetClassName())
                         visibleNodes.append(mrmlNode)
-                except Exception, e:
+                except Exception as e:
                     pass
 
                 
@@ -138,7 +138,7 @@ class SlicerUtils(object):
                 # See if node has a filename.
                 #
                 nodeFN = node.GetFileName()
-            except Exception, e:
+            except Exception as e:
                 pass 
                 #
                 # If there is a filename, get its extension.              
@@ -231,8 +231,8 @@ class SlicerUtils(object):
             # Loop through element tree, replace strings accordingly
             #------------------------
             for subelement in iterator:
-                if subelement.keys():
-                    for name, value in subelement.items():
+                if list(subelement.keys()):
+                    for name, value in list(subelement.items()):
                         #
                         # If no strings to be changed, at least make 
                         # sure filepaths are relative

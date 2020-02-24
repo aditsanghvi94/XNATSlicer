@@ -10,10 +10,10 @@ __status__ = "Production"
 
 
 import os
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import base64
-import urlparse
-import httplib
+import urllib.parse
+import http.client
 import json
 
 
@@ -135,10 +135,12 @@ class Xnat(object):
             #-------------------
             # Make relevant variables for __httpsRequests
             #-------------------       
-            base64string = base64.encodestring('%s:%s' % (self.username, 
-                                                          self.password))[:-1]
-            self.authHeader = { 'Authorization' : 'Basic %s' %(base64string) }
-            self.fileDict = {};
+            #base64string = base64.encodestring('%s:%s' % (self.username,
+            #                                              self.password))[:-1]
+            userpass = self.username + ':' + self.password
+            base64string = base64.b64encode(userpass.encode()).decode()
+            self.authHeader = {'Authorization' : 'Basic %s' %(base64string)}
+            self.fileDict = {}
 
 
 
@@ -178,9 +180,9 @@ class Xnat(object):
             #-------------------- 
             # Force the relevant argumets to lists
             #-------------------- 
-            if isinstance(folderUris, basestring):
+            if isinstance(folderUris, str):
                folderUris = [folderUris]
-            if isinstance(queryArgs, basestring):
+            if isinstance(queryArgs, str):
                queryArgs = [queryArgs]
 
 
@@ -450,7 +452,7 @@ class Xnat(object):
             @param _uri: The XNAT URI to run the "DELETE" method on.
             @type: string
             """
-            print "Deleting '%s'"%(_uri)
+            print("Deleting '%s'"%(_uri))
             response =  self.__httpsRequest('DELETE', _uri, '')
 
 
@@ -719,7 +721,7 @@ class Xnat(object):
             @param _src: The source XNAT URL to cancel the download from.
             @type: string
             """
-            print ("\n\nCancelling download of '%s'"%(_src))
+            print(("\n\nCancelling download of '%s'"%(_src)))
 
             #-------------------- 
             # Pop from queue
@@ -768,8 +770,8 @@ class Xnat(object):
             # Make the request arguments
             #-------------------- 
             url = Xnat.path.makeXnatUrl(self.host, _uri)
-            request = urllib2.Request(url)
-            host = request.get_host()
+            request = urllib.request.Request(url)
+            host = request.host
             #print ("XNAT URL: ", _uri, url) 
             
             #-------------------- 
@@ -778,18 +780,18 @@ class Xnat(object):
             # A ':' indicates the port...
             #-------------------- 
             if ':' in host:
-                connection = httplib.HTTPConnection(host)
+                connection = http.client.HTTPConnection(host)
             else:
-                connection = httplib.HTTPSConnection(host) 
+                connection = http.client.HTTPSConnection(host) 
 
-            header = dict(self.authHeader.items() + headerAdditions.items())
+            header = dict(list(self.authHeader.items()) + list(headerAdditions.items()))
 
 
 
             #-------------------- 
             # Conduct REST call
             #-------------------- 
-            connection.request(method.upper(), request.get_selector(), 
+            connection.request(method.upper(), request.selector,
                                body=body, headers=header)
             return connection.getresponse()
 
@@ -816,7 +818,7 @@ class Xnat(object):
             self.removeFromDownloadQueue(_src)
             dstFile.close()
             os.remove(dstFile.name)
-            print "\nFailed to download '%s'.  Error: %s"%(_src, message)
+            print("\nFailed to download '%s'.  Error: %s"%(_src, message))
             self.runEventCallbacks('downloadFailed', _src, _dst, message)
 
 
@@ -938,7 +940,7 @@ class Xnat(object):
                 if not os.path.exists(dstDir):
                     os.makedirs(dstDir)
                 dstFile = open(_dst, "wb")
-            except Exception, e:
+            except Exception as e:
                 self.__downloadFailed(_src, _dst, dstFile, str(e))
                 return
 
@@ -948,7 +950,7 @@ class Xnat(object):
             # Construct the request and authentication handler
             #-------------------- 
             xnatUrl = Xnat.path.makeXnatUrl(self.host, _src)
-            request = urllib2.Request(xnatUrl)
+            request = urllib.request.Request(xnatUrl)
             request.add_header("Authorization", 
                                self.authHeader['Authorization'])
 
@@ -958,7 +960,7 @@ class Xnat(object):
             # Get the response from the XNAT host.
             #-------------------- 
             try:
-                response = urllib2.urlopen(request)
+                response = urllib.request.urlopen(request)
 
 
 
@@ -1044,7 +1046,7 @@ class Xnat(object):
                 # If DOWNLOAD CANCELLED
                 #              
                 if not self.inDownloadQueue(_src):
-                    print "Cancelling download of '%s'"%(_src)
+                    print("Cancelling download of '%s'"%(_src))
                     dstFile.close()
                     os.remove(dstFile.name)
                     self.runEventCallbacks('downloadCancelled', _src)
@@ -1106,7 +1108,7 @@ class Xnat(object):
             #-------------------- 
             try:
                 return json.loads(response)['ResultSet']['Result']
-            except Exception, e:
+            except Exception as e:
                 self.runEventCallbacks('jsonError', self.host, 
                                        self.username, response)
 
@@ -1291,10 +1293,10 @@ class Xnat(object):
 
             if not _url.startswith(host):
                 if _url.startswith('data/'):
-                    _url = urlparse.urljoin(host, _url)
+                    _url = urllib.parse.urljoin(host, _url)
                 else:
-                    prefixUri = urlparse.urljoin(host, 'data/archive/')
-                    _url = urlparse.urljoin(prefixUri, _url) 
+                    prefixUri = urllib.parse.urljoin(host, 'data/archive/')
+                    _url = urllib.parse.urljoin(prefixUri, _url) 
 
 
             #--------------------

@@ -1,4 +1,4 @@
-from __future__ import with_statement
+
 
 __author__ = "Sunil Kumar (kumar.sunil.p@gmail.com)"
 __copyright__ = "Copyright 2014, Washington University in St. Louis"
@@ -81,7 +81,7 @@ class ScenePackager(object):
             ##print MokaUtils.debug.lf() + ("%s does not exist. Making it."%(saveDirectory)) 
             if os.path.exists(saveDirectory): 
                 shutil.rmtree(saveDirectory)
-        except Exception, e: 
+        except Exception as e: 
             pass
 
 
@@ -91,7 +91,7 @@ class ScenePackager(object):
         #-------------------        
         try: 
             os.mkdir(saveDirectory)
-        except Exception, e: 
+        except Exception as e: 
             pass
 
 
@@ -101,7 +101,7 @@ class ScenePackager(object):
         #-------------------
         try: 
             os.makedirs(saveDirectory + "/Data")
-        except Exception, e: 
+        except Exception as e: 
             MokaUtils.debug.lf( "Likely the dir already exists: " + str(e))
 
 

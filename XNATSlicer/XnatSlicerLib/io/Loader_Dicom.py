@@ -75,7 +75,7 @@ class Loader_Dicom(Loader_Images):
         # and the database files 
         #--------------------
         self.cachedFiles = []
-        for key, value in fullToAbbrev.iteritems():
+        for key, value in fullToAbbrev.items():
             for abbrevUri in abbrevUris:
                 if abbrevUri in key:
                     self.cachedFiles.append(value)
@@ -128,14 +128,10 @@ class Loader_Dicom(Loader_Images):
             self.terminateLoad(['DICOM load', msg ])
             m.moduleSelector().selectModule('DICOM')    
 
-
-
         #--------------------
         # UNZIP dst
         #--------------------
         self.extractDst()
-
-        
 
         #--------------------
         # Add DICOM files to slicer.dicomDataase
@@ -144,7 +140,7 @@ class Loader_Dicom(Loader_Images):
         try:
             dicomIndexer.addListOfFiles(slicer.dicomDatabase, \
                                         self.extractedFiles)
-        except Exception, e:
+        except Exception as e:
             
             #
             # If the database is uninitialized, then initialize it.
@@ -220,6 +216,7 @@ class Loader_Dicom(Loader_Images):
         #--------------------
         dicomScalarVolumePlugin = \
                         slicer.modules.dicomPlugins['DICOMScalarVolumePlugin']()
+        print("matcheddatabasefiles:" + str(matchedDatabaseFiles))
         loadables = dicomScalarVolumePlugin.examine([matchedDatabaseFiles])
 
 

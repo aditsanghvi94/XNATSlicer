@@ -106,7 +106,7 @@ class Loader(object):
             try:
                 shutil.rmtree(os.path.normpath(self.extractPath))
                 os.makedirs(self.extractPath)
-            except Exception, e:
+            except Exception as e:
                 # This fails in windows.
                 #print "LOADER", str(e)
                 pass
@@ -207,7 +207,7 @@ class Loader_Images(Loader):
         
 
         if self.useCached: 
-            print "Using cached set for:", _src
+            print("Using cached set for:", _src)
             self.performUseCacheUpdates()
 
             

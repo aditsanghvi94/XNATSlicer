@@ -1,4 +1,4 @@
-from __future__ import with_statement
+
 
 __author__ = "Sunil Kumar (kumar.sunil.p@gmail.com)"
 __credits__ = ["Sunil Kumar"]
@@ -141,7 +141,7 @@ class MokaUtils(object):
                 if (not os.path.exists(os.path.dirname(dst))):
                     os.makedirs(os.path.dirname(dst))
                 # copy files to backup
-                print "\nBacking up:\n'%s'\nto\n'%s'"%(src, dst)
+                print("\nBacking up:\n'%s'\nto\n'%s'"%(src, dst))
                 shutil.copyfile(src, dst)
 
             MokaUtils.path.fileWalk(srcDir, callback)
@@ -263,9 +263,9 @@ class MokaUtils(object):
                             if not os.path.exists(newPath):
                                 os.mkdir(newPath)
                             newURI = os.path.join(newPath, file)
-                    except Exception, e: 
+                    except Exception as e: 
                         errorStr = str(e)
-                        print ("RootSplit Error: " + errorStr)
+                        print(("RootSplit Error: " + errorStr))
                     #
                     # Move the file, and track it             
                     #
@@ -411,23 +411,25 @@ class MokaUtils(object):
             """
             toDir = os.path.normpath(toDir)
 
-            with zipfile.ZipFile(fromFile) as zip_file:
-                for member in zip_file.namelist():
-                    filename = os.path.basename(member)
-                    # skip directories
-                    if not filename:
-                        continue
-                    # copy file (taken from zipfile's extract)
-                    source = zip_file.open(member)
-                    
-                    try:
-                        os.makedirs(toDir)
-                    except Exception, e:
-                        #print str(e)
-                        pass
-                    target = file(os.path.join(toDir, filename), "wb")
-                    with source, target:
-                        shutil.copyfileobj(source, target)
+            # with zipfile.ZipFile(fromFile) as zip_file:
+            #     for member in zip_file.namelist():
+            #         filename = os.path.basename(member)
+            #         # skip directories
+            #         if not filename:
+            #             continue
+            #         # copy file (taken from zipfile's extract)
+            #         source = zip_file.open(member)
+            #
+            #         try:
+            #             os.makedirs(toDir)
+            #         except Exception as e:
+            #             #print str(e)
+            #             pass
+            #         target = file(os.path.join(toDir, filename), "wb")
+            #         with source, target:
+            #             shutil.copyfileobj(source, target)
+            with zipfile.ZipFile(fromFile, "r") as zip_ref:
+                zip_ref.extractall(toDir)
 
 
 
@@ -522,7 +524,7 @@ class MokaUtils(object):
             @return: The modified string.
             @rtype: str
             """
-            assert isinstance(string, basestring), \
+            assert isinstance(string, str), \
                     'Invalid string: %s'%(string)
 
             capstart = string[0].isupper()
@@ -548,7 +550,7 @@ class MokaUtils(object):
             @return: The modified string.
             @rtype: str
             """
-            assert isinstance(string, basestring), \
+            assert isinstance(string, str), \
                     'Invalid string: %s'%(string)
 
             string = ' '.join(MokaUtils.string.splitAtCaps(string))
@@ -749,7 +751,7 @@ class MokaUtils(object):
                 msg += str(message) + " "
             returnStr = "%s (%s) %s: %s"%(os.path.basename(filename), function_name, line_number, msg)
             
-            print returnStr
+            print(returnStr)
 
 
 
@@ -776,7 +778,7 @@ class MokaUtils(object):
             @return: The bytes converted to MB.
             @rtype: float
             """
-            assert isinstance(decimalPlaces, (int, long)), "%s " + \
+            assert isinstance(decimalPlaces, int), "%s " + \
             "is an invalid decimal place."%(decimalPlaces)
 
             _bytes = int(_bytes)
@@ -994,7 +996,7 @@ class MokaUtils(object):
                 Cleans the options.
                 """
                 # unquote stuff 
-                for name in [val['name']  for key, val in MokaUtils.cmd.ARG_TYPES.iteritems()]:
+                for name in [val['name']  for key, val in MokaUtils.cmd.ARG_TYPES.items()]:
                     if name in self.optDict:
                         self.optDict[name] = MokaUtils.string.unQuote(self.optDict[name])
 
@@ -1009,7 +1011,7 @@ class MokaUtils(object):
                 @param opts: The options to evaluate.
                 @type opts: str or list(str)
                 """
-                if isinstance(opts, basestring):
+                if isinstance(opts, str):
                     opts = [opts]                
                 assert isinstance(opts, list), "%s is an invalid option list."%(opts)
 
@@ -1025,7 +1027,7 @@ class MokaUtils(object):
             def run(self):
                 """
                 """
-                print "PARENT RUN"
+                print("PARENT RUN")
                 pass
 
 
@@ -1049,9 +1051,9 @@ class MokaUtils(object):
                 def callback(src): 
                     if 'extension' in self.optDict:
                         if src.endswith(self.optDict['extension']):
-                            print src
+                            print(src)
                     else:
-                        print src
+                        print(src)
                 MokaUtils.path.fileWalk(self.optDict['directory'], callback)
 
 
@@ -1080,7 +1082,7 @@ class MokaUtils(object):
                    for l in lines:
                        if finder in l:
                            newLines = [injector + '\n'] + newLines
-                           print "Injecting '%s' into '%s'"%(injector, src)
+                           print("Injecting '%s' into '%s'"%(injector, src))
                            break
 
 
@@ -1091,7 +1093,7 @@ class MokaUtils(object):
                        fl.close()
                        
                    except ValueError:
-                        print ValueError 
+                        print(ValueError) 
 
 
 
@@ -1128,10 +1130,10 @@ class MokaUtils(object):
             def printReplace(self, src, finder, replacer, lineNum, oldLine, newLine):
                 """
                 """
-                print "In %s, replaced\n'%s' with '%s', in line: %i\n\n%s%s\n"%(MokaUtils.path.abbreviatePath(src), 
+                print("In %s, replaced\n'%s' with '%s', in line: %i\n\n%s%s\n"%(MokaUtils.path.abbreviatePath(src), 
                                                                                 finder, 
                                                                                 replacer, 
-                                                                                lineNum, oldLine, newLine)
+                                                                                lineNum, oldLine, newLine))
 
             def __replaceInFile(self, src, finder, replacer):
                 """
@@ -1176,8 +1178,8 @@ class MokaUtils(object):
                                 newFile.write("%s" % line)
                             newFile.close()
 
-                    except ValueError, e:
-                        print "File write error: %s %s"%(str(ValueError), str(e))    
+                    except ValueError as e:
+                        print("File write error: %s %s"%(str(ValueError), str(e)))    
 
 
 
@@ -1264,7 +1266,7 @@ class MokaUtils(object):
             @raise: Error if name is not found.
             """
 
-            for k,v in MokaUtils.cmd.ARG_TYPES.iteritems():
+            for k,v in MokaUtils.cmd.ARG_TYPES.items():
                 if v['name'].lower() == name.lower():
                     return k            
             raise Exception("'%s' is not a valid MokaUtils.cmd.ARG_TYPE name"%(name))
@@ -1294,14 +1296,14 @@ class MokaUtils(object):
             # Construct the argument description.
             #
             hintStr = '\nMokaUtils command line options:\n'
-            for key, val in MokaUtils.cmd.ARG_TYPES.iteritems():
+            for key, val in MokaUtils.cmd.ARG_TYPES.items():
                 optName = '-%s (%s) '%(key, val['name'])
                 maxSpace = 25
                 spacerLen = maxSpace if len(optName) < maxSpace else len(optName) + 1
                 spacer = ' '.join(['' for i in range(0, spacerLen - len(optName))])
                 hintStr += '\t%s:%s%s\n'%(optName, spacer, val['desc'])
             hintStr += '\n'
-            print hintStr
+            print(hintStr)
             
 
     
@@ -1321,14 +1323,14 @@ class MokaUtils(object):
             optDict = {key: None for key in MokaUtils.cmd.ARG_TYPES}
             longhandArgDict = {}
             argOpts = ':'.join([key for key in MokaUtils.cmd.ARG_TYPES])
-            argNames = [val['name']  for key, val in MokaUtils.cmd.ARG_TYPES.iteritems()]
+            argNames = [val['name']  for key, val in MokaUtils.cmd.ARG_TYPES.items()]
 
 
             try:
                 opts, args = getopt.getopt(args, argOpts)
 
             except getopt.GetoptError as err:
-                print '\n%s\n'%(str(err))
+                print('\n%s\n'%(str(err)))
                 MokaUtils.cmd.hint()
                 sys.exit(2)
 

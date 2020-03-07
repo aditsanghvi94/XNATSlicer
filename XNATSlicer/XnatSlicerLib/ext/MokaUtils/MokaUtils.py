@@ -394,15 +394,13 @@ class MokaUtils(object):
             shutil.move(src, dst)
             return dst
 
-
-
         @staticmethod 
         def extractAllFiles(fromFile, toDir):
             """
             Extracts files within a zip and writes them to a directory,
             disregarding the directory structure within the zip file.
 
-            @param fromFile: The source path of the deompressible file.
+            @param fromFile: The source path of the decompressible file.
             @type fromFile: string
             
             @param toDir: The dst directory of the file to decompress. 
@@ -410,6 +408,13 @@ class MokaUtils(object):
             @type dst: string
             """
             toDir = os.path.normpath(toDir)
+            print("from: " + fromFile)
+            print("to: " + toDir)
+            try:
+                os.makedirs(toDir)
+            except:
+                pass
+            os.path.altsep = '\\'
 
             # with zipfile.ZipFile(fromFile) as zip_file:
             #     for member in zip_file.namelist():
@@ -431,12 +436,8 @@ class MokaUtils(object):
             with zipfile.ZipFile(fromFile, "r") as zip_ref:
                 zip_ref.extractall(toDir)
 
-
-
-
-
         @staticmethod    
-        def decompress(src, dst = None):
+        def decompress(src, dst=None):
             """ 
             Employs various methods to decompress a given file
             based on the file extension.  

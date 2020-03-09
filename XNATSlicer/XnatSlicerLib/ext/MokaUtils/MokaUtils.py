@@ -428,8 +428,13 @@ class MokaUtils(object):
                     targetpath = os.path.normpath(targetpath)
                     upperdirs = os.path.dirname(targetpath)
                     print(targetpath)
-                    if upperdirs and not os.path.exists(upperdirs):
+                    print(str(os.path.exists(upperdirs)))
+                    try:
                         os.makedirs(upperdirs)
+                    except:
+                        print("could not create upperdirs")
+                        print(upperdirs)
+                        pass
                     source = zip_file.open(member)
                     target = open(targetpath, "w")
                     shutil.copyfileobj(source, target)

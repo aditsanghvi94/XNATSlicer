@@ -424,7 +424,7 @@ class MokaUtils(object):
                     else:
                         arcname = member.filename.replace('/', os.path.sep)
                     print(arcname)
-                    targetpath = os.path.join(targetpath, arcname)
+                    targetpath = os.path.join(toDir, arcname)
                     targetpath = os.path.normpath(targetpath)
                     upperdirs = os.path.dirname(targetpath)
                     print(targetpath)

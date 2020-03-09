@@ -413,12 +413,26 @@ class MokaUtils(object):
             try:
                 os.makedirs(toDir)
             except:
+                print("make dir failed")
                 pass
 
             with zipfile.ZipFile(fromFile) as zip_file:
-                for member in zip_file.namelist():
+                for member in zip_file.infolist():
                     print(str(member))
-                    zip_file.extract(member, toDir)
+                    if os.path.sep == '/':
+                        arcname = member.filename.replace('\\', os.path.sep)
+                    else:
+                        arcname = member.filename.replace('/', os.path.sep)
+                    print(arcname)
+                    targetpath = os.path.join(targetpath, arcname)
+                    targetpath = os.path.normpath(targetpath)
+                    upperdirs = os.path.dirname(targetpath)
+                    print(targetpath)
+                    if upperdirs and not os.path.exists(upperdirs):
+                        os.makedirs(upperdirs)
+                    with zip_file.open(member) as source, open(targetpath, "w") as target:
+                        shutil.copyfileobj(source, target)
+                    #zip_file.extract(member, toDir)
 
             # with zipfile.ZipFile(fromFile) as zip_file:
             #     for member in zip_file.namelist():

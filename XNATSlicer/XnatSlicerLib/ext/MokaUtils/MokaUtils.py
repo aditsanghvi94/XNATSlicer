@@ -414,7 +414,11 @@ class MokaUtils(object):
                 os.makedirs(toDir)
             except:
                 pass
-            os.path.altsep = '\\'
+
+            with zipfile.ZipFile(fromFile) as zip_file:
+                for member in zip_file.namelist():
+                    print(str(member))
+                    zip_file.extract(member, toDir)
 
             # with zipfile.ZipFile(fromFile) as zip_file:
             #     for member in zip_file.namelist():
@@ -430,11 +434,12 @@ class MokaUtils(object):
             #         except Exception as e:
             #             #print str(e)
             #             pass
-            #         target = file(os.path.join(toDir, filename), "wb")
+            #         # target = open(os.path.join(toDir, filename), "w")
+            #         target = os.path.join(toDir, filename)
             #         with source, target:
             #             shutil.copyfileobj(source, target)
-            with zipfile.ZipFile(fromFile, "r") as zip_ref:
-                zip_ref.extractall(toDir)
+            #with zipfile.ZipFile(fromFile, "r") as zip_ref:
+            #    zip_ref.extractall(toDir)
 
         @staticmethod    
         def decompress(src, dst=None):

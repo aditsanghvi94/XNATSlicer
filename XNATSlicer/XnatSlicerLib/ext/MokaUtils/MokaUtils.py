@@ -436,7 +436,7 @@ class MokaUtils(object):
                         print(upperdirs)
                         pass
                     source = zip_file.open(member)
-                    target = open(targetpath, "w")
+                    target = open(targetpath, "wb")
                     shutil.copyfileobj(source, target)
                     target.close()
                     source.close()

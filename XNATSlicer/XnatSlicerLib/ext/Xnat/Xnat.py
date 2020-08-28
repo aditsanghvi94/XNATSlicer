@@ -684,8 +684,8 @@ class Xnat(object):
                 connection = http.client.HTTPConnection(host)
             else:
                 context = ssl.SSLContext()
-                context.load_cert_chain(certfile=os.environ['CERTFILE'],#'/Users/sanghvia/Library/Application Support/mkcert/rootCA.pem',
-                                        keyfile=os.environ['KEYFILE'])#'/Users/sanghvia/Library/Application Support/mkcert/rootCA-key.pem')
+                context.load_cert_chain(certfile=os.environ['CERTFILE'],
+                                        keyfile=os.environ['KEYFILE'])
                 connection = http.client.HTTPSConnection(host, context=context)
 
             header = dict(list(self.authHeader.items()) + list(headerAdditions.items()))
@@ -835,9 +835,8 @@ class Xnat(object):
             # Construct the request and authentication handler
             # --------------------
             context = ssl.SSLContext()
-            # context.load_cert_chain(os.environ['REQUESTS_CA_BUNDLE'])
-            context.load_cert_chain(certfile='/Users/sanghvia/Library/Application Support/mkcert/rootCA.pem',
-                                    keyfile='/Users/sanghvia/Library/Application Support/mkcert/rootCA-key.pem')
+            context.load_cert_chain(certfile=os.environ['CERTFILE'],
+                                    keyfile=os.environ['KEYFILE'])
 
             xnatUrl = Xnat.path.makeXnatUrl(self.host, _src)
             request = urllib.request.Request(xnatUrl)

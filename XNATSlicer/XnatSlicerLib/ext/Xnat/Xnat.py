@@ -14,7 +14,6 @@ import base64
 import urllib.parse
 import http.client
 import json
-import ssl
 
 
 class Xnat(object):
@@ -683,10 +682,7 @@ class Xnat(object):
             if ':' in host:
                 connection = http.client.HTTPConnection(host)
             else:
-                context = ssl.SSLContext()
-                context.load_cert_chain(certfile=os.environ['CERTFILE'],
-                                        keyfile=os.environ['KEYFILE'])
-                connection = http.client.HTTPSConnection(host, context=context)
+                connection = http.client.HTTPSConnection(host)
 
             header = dict(list(self.authHeader.items()) + list(headerAdditions.items()))
 
@@ -834,9 +830,6 @@ class Xnat(object):
             # --------------------
             # Construct the request and authentication handler
             # --------------------
-            context = ssl.SSLContext()
-            context.load_cert_chain(certfile=os.environ['CERTFILE'],
-                                    keyfile=os.environ['KEYFILE'])
 
             xnatUrl = Xnat.path.makeXnatUrl(self.host, _src)
             request = urllib.request.Request(xnatUrl)
@@ -847,7 +840,7 @@ class Xnat(object):
             # Get the response from the XNAT host.
             # --------------------
             try:
-                response = urllib.request.urlopen(request,context=context)
+                response = urllib.request.urlopen(request)
 
 
 

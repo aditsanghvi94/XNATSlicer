@@ -184,9 +184,9 @@ class Loader_Dicom(Loader_Images):
         # in the slicer.dicomDatabase.  Speed preferred over
         # memory consumption here.
         #--------------------      
-        dlDicomObj = {}
+        dlDicomObj = set()
         for dlFile in dicomFiles:
-            dlDicomObj[os.path.basename(dlFile)] = dlFile
+            dlDicomObj.add(dlFile)
 
 
             
@@ -204,7 +204,7 @@ class Loader_Dicom(Loader_Images):
                     # If there's a match, append to 'matchedDatabaseFiles'.
                     #
                     for sFile in seriesFiles:
-                       if os.path.basename(sFile) in dlDicomObj: 
+                       if sFile in dlDicomObj: 
                            matchedDatabaseFiles.append(sFile)
 
 
